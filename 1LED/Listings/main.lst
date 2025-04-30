@@ -1,0 +1,48 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              04/24/2025 18:13:22 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.ls
+                    -t) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          
+   3          sbit LED1 = P2^0;//P2端口第0位,也就是P2.0引脚
+   4          
+   5          void Delay_ms(unsigned int ms) {
+   6   1          unsigned int i, j;
+   7   1          for (i = 0; i < ms; i++)
+   8   1              for (j = 0; j < 123; j++); // 内层循环耗时，用于微调
+   9   1      }
+  10          
+  11          void main(){
+  12   1        //LED1 = 0;//0点亮//
+  13   1        while(1)
+  14   1        {
+  15   2          //将 P2.0 引脚定义为一个名为 LED1 的位变量，方便之后用 LED1 来控制这个引脚。//
+  16   2          //HAL_Delay(1000);//
+  17   2          Delay_ms(1000);
+  18   2          LED1 = 0;
+  19   2          //HAL_Delay(1000);//
+  20   2          Delay_ms(1000);
+  21   2          LED1 = 1;
+  22   2        }
+  23   1      }
+  24          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     48    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
