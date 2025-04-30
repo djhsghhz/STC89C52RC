@@ -1,0 +1,134 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              04/24/2025 23:28:07 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE ..\1LED\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*
+   2          #include "reg52.h"
+   3          
+   4          sbit LED1 = P2^0;//P2端口第0位,也就是P2.0引脚
+   5          
+   6          void Delay_ms(unsigned int ms) {
+   7              unsigned int i, j;
+   8              for (i = 0; i < ms; i++)
+   9                  for (j = 0; j < 123; j++); // 内层循环耗时，用于微调
+  10          }
+  11          
+  12          void main(){
+  13            //LED1 = 0;//0点亮//
+  14            while(1)
+  15            {
+  16              //将 P2.0 引脚定义为一个名为 LED1 的位变量，方便之后用 LED1 来控制这个引脚。//
+  17              //HAL_Delay(1000);//
+  18              Delay_ms(1000);
+  19              LED1 = 0;
+  20              //HAL_Delay(1000);//
+  21              Delay_ms(1000);
+  22              LED1 = 1;
+  23            }
+  24          }
+  25          
+  26          */
+  27          //下面进行一个实验，8位的流水灯时，用uchar，这个类型正好是8位，正好对应8个灯，循环移位时一个个点亮。
+  28          //那如果是12个灯呢，这个时候就要用16位的unsigned int，这时候位数才够，但是0000 1000 0000 0000对应第12个灯
+  29          //那0001 0000 0000 0000时呢，0010 0000 0000 0000时呢，这些对应不存在的第13,14,15,16灯。
+  30          //如果只有12个灯，但定义了一个总位数位16的数字，在0001 0000 0000 0000，0010 0000 0000 0000，0100 0000 0000
+             - 0000，
+  31          //1000 0000 0000 0000这些时候并没有任何一盏灯会亮，而循环到0000 0000 0000 0001时，第一盏灯亮是吗
+  32          //用8个灯来实验，不定义正好8位的uchar，而定义16位的uint，造成0000 0000 1000 0000后再左移，0000 0001 0000 0
+             -000没有灯对应的情况
+  33          //每次移位都延时，那么如果亮完一轮，从第8灯到第1灯中间隔了移动8位所需的时间，则在0001 0000 0000 0000，0010
+             - 0000 0000 0000，0100 0000 0000 0000，
+  34          //1000 0000 0000 0000这些时候并没有任何一盏灯会亮，而循环到0000 0000 0000 0001时，第一盏灯亮
+  35          
+  36          #include "reg52.h"
+  37          #include "intrins.h"
+  38          
+  39          #define uchar unsigned char
+  40          #define uint unsigned int
+  41          
+  42          
+  43          
+  44          
+  45          void Delay_ms(unsigned int ms) {
+  46   1          unsigned int i, j;
+  47   1          for (i = 0; i < ms; i++)
+  48   1              for (j = 0; j < 123; j++); // 内层循环耗时，用于微调
+  49   1      }
+  50          
+  51          void main(){
+C51 COMPILER V9.60.7.0   MAIN                                                              04/24/2025 23:28:07 PAGE 2   
+
+  52   1        uint led = 0000000000000001;
+  53   1        while(1)
+  54   1        {
+  55   2          //将 P2.0 引脚定义为一个名为 LED1 的位变量，方便之后用 LED1 来控制这个引脚。//
+  56   2          P2 = ~led;
+  57   2          Delay_ms(1000);
+  58   2          led = _irol_(led,1);//第一次实验用了crol（charrol导致失败）
+  59   2        }
+  60   1      }
+  61          
+  62          
+  63          //8灯和1灯之间并没有停顿.二次实验更正：确实停了，之前因为用了crol（char左移，可能是自动转成8位char了？）改
+             -成irol（uint 左移后成功实现中间停顿）。
+  64          /*罪  魁  祸  首
+  65          extern unsigned char _cror_    (unsigned char, unsigned char);
+  66          extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  67          extern unsigned long _lror_    (unsigned long, unsigned char);
+  68          extern unsigned char _crol_    (unsigned char, unsigned char);
+  69          extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  70          extern unsigned long _lrol_    (unsigned long, unsigned char);
+  71          罪  魁  祸  首
+  72          */
+  73          
+  74          /*
+  75          #include <reg52.h>
+  76          #include <intrins.h>  // 用于 _nop_()
+  77          
+  78          #define uint unsigned int
+  79          #define uchar unsigned char
+  80          
+  81          // 延时函数（毫秒级）
+  82          void Delay_ms(uint ms) {
+  83              uint i, j;
+  84              for (i = 0; i < ms; i++)
+  85                  for (j = 0; j < 123; j++);
+  86          }
+  87          
+  88          // 左循环移位函数（8位）
+  89          uchar crol(uchar value, uchar n) {
+  90              return (value << n) | (value >> (8 - n));
+  91          }
+  92          
+  93          void main() {
+  94              uchar led = 0x01;  // 最初点亮最低位（P2.0）
+  95          
+  96              while (1) {
+  97                  P2 = ~led;        // P2 输出：取反是因为低电平点亮LED
+  98                  Delay_ms(200);    // 延时200ms
+  99                  led = crol(led, 1); // 左循环移位
+ 100              }
+ 101          }
+ 102          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     72    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.60.7.0   MAIN                                                              04/24/2025 23:28:07 PAGE 3   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

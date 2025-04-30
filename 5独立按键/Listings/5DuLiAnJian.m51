@@ -1,0 +1,140 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    04/30/2025  14:54:00  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE .\Objects\mai.obj TO .\Objects\5DuLiAnJian PRINT (.\Listings\5DuLiAnJian.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\mai.obj (MAI)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\5DuLiAnJian (MAI)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0011H     UNIT         ?DT?MAI
+            IDATA   0019H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     008CH     UNIT         ?C_C51STARTUP
+            CODE    088CH     0027H     UNIT         ?PR?KEYBOARD_SCAN?MAI
+            CODE    08B3H     0014H     UNIT         ?C_INITSEG
+            CODE    08C7H     000EH     UNIT         ?PR?_DISPLAY?MAI
+            CODE    08D5H     0008H     UNIT         ?PR?MAIN?MAI
+            CODE    08DDH     0007H     UNIT         ?PR?_DELAY?MAI
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\5DuLiAnJian (MAI)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAI
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAI
+  +--> ?PR?KEYBOARD_SCAN?MAI
+  +--> ?PR?_DISPLAY?MAI
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\5DuLiAnJian (MAI)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAI
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  04/30/2025  14:54:00  PAGE 2
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  C:08DDH         PUBLIC        _delay
+  B:00A0H.2       PUBLIC        LEDA
+  B:00A0H.3       PUBLIC        LEDB
+  B:00A0H.4       PUBLIC        LEDC
+  D:00B8H         PUBLIC        IP
+  B:00B0H.1       PUBLIC        KEY1
+  B:00B0H.0       PUBLIC        KEY2
+  B:00B0H.2       PUBLIC        KEY3
+  C:08D5H         PUBLIC        main
+  D:0008H         PUBLIC        gsmg_code
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:088CH         PUBLIC        keyboard_scan
+  D:00C8H         PUBLIC        T2CON
+  C:08C7H         PUBLIC        _display
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY
+  D:0007H         SYMBOL        tenus
+  C:08DDH         LINE#         37
+  C:08DDH         LINE#         38
+  C:08E3H         LINE#         39
+  -------         ENDPROC       _DELAY
+  -------         PROC          KEYBOARD_SCAN
+  C:088CH         LINE#         42
+  C:088CH         LINE#         43
+  C:0895H         LINE#         44
+  C:0898H         LINE#         45
+  C:089BH         LINE#         46
+  C:089EH         LINE#         47
+  C:08A1H         LINE#         48
+  C:08A4H         LINE#         49
+  C:08A7H         LINE#         50
+  C:08A7H         LINE#         51
+  C:08B0H         LINE#         52
+  C:08B2H         LINE#         53
+  C:08B2H         LINE#         54
+  -------         ENDPROC       KEYBOARD_SCAN
+  -------         PROC          _DISPLAY
+  D:0007H         SYMBOL        key
+  C:08C7H         LINE#         57
+  C:08C7H         LINE#         58
+  C:08C9H         LINE#         59
+  C:08CBH         LINE#         60
+  C:08CDH         LINE#         61
+  C:08D4H         LINE#         63
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          MAIN
+  -------         DO            
+  D:0006H         SYMBOL        keyval
+  -------         ENDDO         
+  C:08D5H         LINE#         64
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  04/30/2025  14:54:00  PAGE 3
+
+
+  C:08D5H         LINE#         66
+  C:08D5H         LINE#         67
+  C:08D8H         LINE#         68
+  C:08DBH         LINE#         71
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAI
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?MAI
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0057H BYTE ( 4%) *
+******************************************************************************
+
+Program Size: data=26.0 xdata=0 code=231
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)
